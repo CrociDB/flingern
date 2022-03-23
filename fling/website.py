@@ -83,14 +83,16 @@ class FlingernWebsite:
             ratio = im.size[0] / im.size[1]
             
             # image
-            dimensions = (int(self.site["images_max_height"] * ratio), self.site["images_max_height"])
-            nim = im.resize(dimensions)
-            nim.save(image_file, "JPEG", optimize=True, quality=self.site["images_quality"])
+            if not os.path.isfile(image_file):
+                dimensions = (int(self.site["images_max_height"] * ratio), self.site["images_max_height"])
+                nim = im.resize(dimensions)
+                nim.save(image_file, "JPEG", optimize=True, quality=self.site["images_quality"])
 
             # thumb
-            dimensions = (int(self.site["thumbs_max_height"] * ratio), self.site["thumbs_max_height"])
-            nim = im.resize(dimensions)
-            nim.save(image_thumb_file, "JPEG", optimize=True, quality=self.site["thumbs_quality"])
+            if not os.path.isfile(image_thumb_file):
+                dimensions = (int(self.site["thumbs_max_height"] * ratio), self.site["thumbs_max_height"])
+                nim = im.resize(dimensions)
+                nim.save(image_thumb_file, "JPEG", optimize=True, quality=self.site["thumbs_quality"])
 
         info = {
             "path": os.path.join(page["name"], image_name) + ".jpg",
