@@ -32,12 +32,18 @@ class FlingernWebsite:
             pages.append(self.setup_page(page))
         self.site["pages"] = pages
 
-        # copy theme structure
+        # create theme structure
         if not os.path.isdir(self.pub_dir):
-            shutil.copytree(
-                os.path.join(".", defs.DIR_THEME),
-                self.pub_dir
-            )
+            os.mkdir(self.pub_dir)
+
+        theme_pub = os.path.join(self.pub_dir, "public/")
+        if os.path.isdir(theme_pub):
+            shutil.rmtree(theme_pub)
+        
+        shutil.copytree(
+            os.path.join(".", defs.DIR_THEME_PUBLIC),
+            theme_pub
+        )
 
         # loading templates
         self.site_templates = PageTemplateLoader(os.path.join(".", defs.DIR_THEME))
