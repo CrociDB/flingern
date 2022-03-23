@@ -4,6 +4,8 @@ import shutil
 import datetime
 import glob2
 
+from PIL import Image
+
 import yaml
 from chameleon import PageTemplateLoader
 
@@ -53,8 +55,10 @@ class FlingernWebsite:
         
         page = yaml.safe_load(content[0])
 
-        url = os.path.basename(page_file).split(".")[0] + ".html"
+        page_name = os.path.basename(page_file).split(".")[0]
+        url = page_name + ".html"
 
+        page["name"] = page_name
         page["url"] = url
         page["content"] = content[1]
 
@@ -65,23 +69,44 @@ class FlingernWebsite:
         for img in page["images"]:
             imgs = glob2.glob(os.path.join(self.path, img))
             for i in imgs:
-                images.append(self.setup_image(i))
+                images.append(self.setup_image(page, i))
 
-        print(images)
-        
         page["images"] = images
 
-    def setup_image(self, image):
+    def setup_image(self, page, original_image_path):
+        image_name = os.path.basename(original_image_path).split(".")[0]
+        image_file = os.path.join(page["images_path"], image_name) + ".jpg"
+        image_thumb_file = os.path.join(page["images_path"], image_name) + "_thumb.jpg"
+
+        with Image.open(original_image_path) as im:
+            ratio = im.size[0] / im.size[1]
+            
+            # image
+            dimensions = (int(self.site["images_max_height"] * ratio), self.site["images_max_height"])
+            nim = im.resize(dimensions)
+            nim.save(image_file, "JPEG", optimize=True, quality=self.site["images_quality"])
+
+            # thumb
+            dimensions = (int(self.site["thumbs_max_height"] * ratio), self.site["thumbs_max_height"])
+            nim = im.resize(dimensions)
+            nim.save(image_thumb_file, "JPEG", optimize=True, quality=self.site["thumbs_quality"])
+
         info = {
-            "path": ".",
-            "thumb": "."
+            "path": os.path.join(page["name"], image_name) + ".jpg",
+            "thumb": os.path.join(page["name"], image_name) + "_thumb.jpg"
         }
 
         return info
 
 
     def build_page(self, page):
-        print("Building page %s" % page["title"])
+        print("Building page %s" % page["url"])
+
+        images_path = os.path.join(self.pub_dir, page["name"])
+        if not os.path.isdir(images_path):
+            os.mkdir(images_path)
+
+        page["images_path"] = images_path
 
         # setup images
         self.setup_images(page)

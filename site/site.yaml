@@ -1,6 +1,11 @@
 title: "flingern"
 author: "Bruno Croci"
 
+images_max_height: 1024
+images_quality: 65
+thumbs_max_height: 256
+thumbs_quality: 30
+
 pages:
   - flingern/index.md
   - flingern/other.md
