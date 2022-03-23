@@ -2,6 +2,7 @@ import os
 import sys
 import shutil
 import datetime
+import glob2
 
 import yaml
 from chameleon import PageTemplateLoader
@@ -59,8 +60,31 @@ class FlingernWebsite:
 
         return page
 
+    def setup_images(self, page):
+        images = []
+        for img in page["images"]:
+            imgs = glob2.glob(os.path.join(self.path, img))
+            for i in imgs:
+                images.append(self.setup_image(i))
+
+        print(images)
+        
+        page["images"] = images
+
+    def setup_image(self, image):
+        info = {
+            "path": ".",
+            "thumb": "."
+        }
+
+        return info
+
+
     def build_page(self, page):
         print("Building page %s" % page["title"])
+
+        # setup images
+        self.setup_images(page)
 
         result = self.site_page_template(site=self.site, page=page)
         
