@@ -1,4 +1,4 @@
-title: "flingern - static photography gallery website generator"
+title: "static photography gallery website generator"
 images: 
       - flingern/*.jpg
 ---
