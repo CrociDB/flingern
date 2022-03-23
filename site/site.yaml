@@ -2,7 +2,5 @@ title: "flingern"
 author: "Bruno Croci"
 
 pages:
-  - index:
-    content: index.md
-    images: 
-      - index_photos/*.jpg
+  - flingern/index.md
+  - flingern/other.md

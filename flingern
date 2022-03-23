@@ -2,6 +2,8 @@
 
 import argparse
 
+from fling import website
+
 version = "0.1"
 header = f"flingern {version}"
 
@@ -9,3 +11,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=header)
     parser.add_argument("path", help="build the website specified by path")
     args = parser.parse_args()
+
+    site = website.FlingernWebsite(args.path)
+    site.build()

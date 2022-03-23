@@ -5,7 +5,7 @@
     <body>
         <div id="menu">
             <ul>
-                <li tal:repeat="page site.pages"><a href="${page.url}">${page.title}</a></li>
+                <li tal:repeat="p site.pages"><a href="{p.url}">${p.title}</a></li>
             </ul>
         </div>
         <div id="page">
@@ -16,7 +16,7 @@
             <div id="gallery">
                 <ul>
                     <li tal:repeat="img page.images">
-                        <a href="${img.path}"><img src="${img.thumb}"></a>
+                        <a href="{img.path}"><img src="{img.thumb}"></a>
                     </li>
                 </ul>
             </div>
