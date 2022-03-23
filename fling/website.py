@@ -5,9 +5,10 @@ import datetime
 import glob2
 
 from PIL import Image
-
-import yaml
 from chameleon import PageTemplateLoader
+
+import markdown
+import yaml
 
 from fling import defs
 
@@ -51,7 +52,7 @@ class FlingernWebsite:
         with open(page_path, 'r') as f:
             page_content = f.read()
 
-        content = page_content.split("---")
+        content = page_content.split("---MD---")
         
         page = yaml.safe_load(content[0])
 
@@ -60,7 +61,7 @@ class FlingernWebsite:
 
         page["name"] = page_name
         page["url"] = url
-        page["content"] = content[1]
+        page["content"] = markdown.markdown(content[1], extensions=['tables'])
 
         return page
 
