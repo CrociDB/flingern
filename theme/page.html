@@ -2,27 +2,54 @@
     <header>
         <title>${site.title} - ${page.title}</title>
         <link rel="stylesheet" href="public/style.css">
+
+        <link rel="stylesheet" href="public/photoswipe/default-skin/default-skin.css">
+        <script src="public/photoswipe/photoswipe.min.js"></script>
+        <script src="public/photoswipe/photoswipe-ui-default.min.js"></script>
     </header>
     <body>
-        <div id="menu">
-            <ul>
-                <li tal:repeat="p site.pages"><a href="${p.url}">${p.title}</a></li>
-            </ul>
-        </div>
-        <div id="page">
-            <h1>${page.title}</h1>
-            <div id="content" tal:content="structure page.content">
+        <div id="site">
+            <div id="center">
+                <div id="menu">
+                    <h1>${site.title}</h1>
+                    <ul>
+                        <li tal:repeat="p site.pages"><a href="${p.url}">${p.title}</a></li>
+                    </ul>
+                </div>
+                <div id="page">
+                    <h1>${page.title}</h1>
+                    <div id="content" tal:content="structure page.content">
+                    </div>
+                    <div id="gallery">
+                        <ul>
+                            <li tal:repeat="img page.images">
+                                <a href="${img.path}"><img src="${img.thumb}"></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <a href="${img.path}" tal:repeat="img page.images" 
+                            data-pswp-src="${img.path}"
+                            data-pswp-width="2500" 
+                            data-pswp-height="1666" 
+                            target="_blank">
+                            <img src="${img.thumb}" alt="" />
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div id="gallery">
-                <ul>
-                    <li tal:repeat="img page.images">
-                        <a href="${img.path}"><img src="${img.thumb}"></a>
-                    </li>
-                </ul>
+            <div id="footer">
+                <p>${site.author} ${site.year} - created using flingern</p>
             </div>
         </div>
-        <div id="footer">
-            <p>${site.author} ${site.year} - created using flingern</p>
-        </div>
+
+        <script type="module">
+            const lightbox = new PhotoSwipeLightbox({
+                gallery: '#gallery--no-dynamic-import',
+                children: 'a',
+                pswpModule: PhotoSwipe
+            });
+            lightbox.init();
+            </script>
     </body>
 </html>

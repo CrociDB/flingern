@@ -1,0 +1,76 @@
+<html>
+    <header>
+        <title>flingern - static photography gallery website generator</title>
+        <link rel="stylesheet" href="public/style.css">
+
+        <link rel="stylesheet" href="public/photoswipe/default-skin/default-skin.css">
+        <script src="public/photoswipe/photoswipe.min.js"></script>
+        <script src="public/photoswipe/photoswipe-ui-default.min.js"></script>
+    </header>
+    <body>
+        <div id="site">
+            <div id="center">
+                <div id="menu">
+                    <h1>flingern</h1>
+                    <ul>
+                        <li><a href="index.html">static photography gallery website generator</a></li>
+                        <li><a href="other.html">another page</a></li>
+                    </ul>
+                </div>
+                <div id="page">
+                    <h1>static photography gallery website generator</h1>
+                    <div id="content"><p><strong>flingern</strong> is a static photography gallery website generator written in python.</p>
+<p>You can make beautiful and functional gallery websites just like this one.</p></div>
+                    <div id="gallery">
+                        <ul>
+                            <li>
+                                <a href="index/img20220323_12530914.jpg"><img src="index/img20220323_12530914_thumb.jpg"></a>
+                            </li>
+                            <li>
+                                <a href="index/img20220323_12570180.jpg"><img src="index/img20220323_12570180_thumb.jpg"></a>
+                            </li>
+                            <li>
+                                <a href="index/img20220323_12580205.jpg"><img src="index/img20220323_12580205_thumb.jpg"></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <a href="index/img20220323_12530914.jpg" 
+                            data-pswp-src="index/img20220323_12530914.jpg"
+                            data-pswp-width="2500" 
+                            data-pswp-height="1666" 
+                            target="_blank">
+                            <img src="index/img20220323_12530914_thumb.jpg" alt="" />
+                        </a>
+                        <a href="index/img20220323_12570180.jpg" 
+                            data-pswp-src="index/img20220323_12570180.jpg"
+                            data-pswp-width="2500" 
+                            data-pswp-height="1666" 
+                            target="_blank">
+                            <img src="index/img20220323_12570180_thumb.jpg" alt="" />
+                        </a>
+                        <a href="index/img20220323_12580205.jpg" 
+                            data-pswp-src="index/img20220323_12580205.jpg"
+                            data-pswp-width="2500" 
+                            data-pswp-height="1666" 
+                            target="_blank">
+                            <img src="index/img20220323_12580205_thumb.jpg" alt="" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div id="footer">
+                <p>Bruno Croci 2022 - created using flingern</p>
+            </div>
+        </div>
+
+        <script type="module">
+            const lightbox = new PhotoSwipeLightbox({
+                gallery: '#gallery--no-dynamic-import',
+                children: 'a',
+                pswpModule: PhotoSwipe
+            });
+            lightbox.init();
+            </script>
+    </body>
+</html>
