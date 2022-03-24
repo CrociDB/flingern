@@ -31,10 +31,6 @@ class FlingernWebsite:
             pages.append(self.setup_page(page))
         self.site["pages"] = pages
 
-        # loading templates
-        self.site_templates = PageTemplateLoader(os.path.join(os.getcwd(), defs.DIR_THEME))
-        self.site_page_template = self.site_templates["page.html"]
-
     def build(self):
         # create theme structure
         if not os.path.isdir(self.pub_dir):
@@ -48,6 +44,10 @@ class FlingernWebsite:
             os.path.join(os.getcwd(), defs.DIR_THEME_PUBLIC),
             theme_pub
         )
+
+        # loading templates
+        self.site_templates = PageTemplateLoader(os.path.join(os.getcwd(), defs.DIR_THEME))
+        self.site_page_template = self.site_templates["page.html"]
 
         # generate pages
         for page in self.site["pages"]:
