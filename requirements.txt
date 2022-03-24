@@ -4,3 +4,4 @@ PyYAML==5.3.1
 glob2==0.4.1
 markdown==3.3.6
 watchdog==2.1.6
+importlib-metadata==4.8.3
