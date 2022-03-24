@@ -1,16 +1,55 @@
 #!/usr/bin/python3
 
+import os
+import time
 import argparse
+import threading
+import http.server
+import socketserver
+
+from functools import partial
 
 from fling import website
+from fling import watchdog
+from fling import defs
 
 version = "0.1"
 header = f"flingern {version}"
+port = 8080
+
+def run_webserver(path):
+    handler = partial(http.server.SimpleHTTPRequestHandler, directory=path)
+    httpd = socketserver.TCPServer(("", port), handler)
+    print("Serving at port", port)
+    httpd.serve_forever()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=header)
     parser.add_argument("path", help="build the website specified by path")
+    parser.add_argument('-w', '--watch', help='creates a webserver and watches for changes', action='store_true')
     args = parser.parse_args()
 
     site = website.FlingernWebsite(args.path)
     site.build()
+
+    if args.watch:
+        # create webserver
+        t = threading.Thread(target=run_webserver, args=(os.path.join(".", args.path, "public/"),))
+        t.start()
+
+        # create watchdog
+        watchdog_site = watchdog.watchdog_at(args.path)
+        watchdog_theme = watchdog.watchdog_at(os.path.join(".", defs.DIR_THEME))
+
+        try:
+            while True:
+                time.sleep(1)
+                if watchdog.filesystem_changed:
+                    watchdog.filesystem_changed = False
+                    site.build()
+
+        except KeyboardInterrupt:
+            watchdog_site.stop()
+            watchdog_theme.stop()
+
+        t.join()

@@ -21,10 +21,9 @@ class FlingernWebsite:
             self.site = yaml.safe_load(f)
 
         self.site["year"] = datetime.datetime.today().year
-
-    def build(self):
-        # figurate paths
-        self.pub_dir = os.path.join(".", self.path, defs.DIR_PUBLIC)
+        
+        # figuring paths
+        self.pub_dir = os.path.join(self.path, defs.DIR_PUBLIC)
 
         # setup pages
         pages = []
@@ -32,6 +31,11 @@ class FlingernWebsite:
             pages.append(self.setup_page(page))
         self.site["pages"] = pages
 
+        # loading templates
+        self.site_templates = PageTemplateLoader(os.path.join(os.getcwd(), defs.DIR_THEME))
+        self.site_page_template = self.site_templates["page.html"]
+
+    def build(self):
         # create theme structure
         if not os.path.isdir(self.pub_dir):
             os.mkdir(self.pub_dir)
@@ -41,20 +45,16 @@ class FlingernWebsite:
             shutil.rmtree(theme_pub)
         
         shutil.copytree(
-            os.path.join(".", defs.DIR_THEME_PUBLIC),
+            os.path.join(os.getcwd(), defs.DIR_THEME_PUBLIC),
             theme_pub
         )
-
-        # loading templates
-        self.site_templates = PageTemplateLoader(os.path.join(".", defs.DIR_THEME))
-        self.site_page_template = self.site_templates["page.html"]
 
         # generate pages
         for page in self.site["pages"]:
             self.build_page(page)
             
     def setup_page(self, page_file):
-        page_path = os.path.join('.', self.path, page_file)
+        page_path = os.path.join(self.path, page_file)
         with open(page_path, 'r') as f:
             page_content = f.read()
 
@@ -73,6 +73,9 @@ class FlingernWebsite:
 
     def setup_images(self, page):
         images = []
+
+        if len(page["images"]) == 0 or not isinstance(page["images"][0], str): return
+
         for img in page["images"]:
             imgs = glob2.glob(os.path.join(self.path, img))
             for i in imgs:
