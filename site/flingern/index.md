@@ -1,4 +1,5 @@
-title: "static photography gallery website generator"
+title: "Static photography gallery website generator"
+menu: "Home"
 images: 
       - flingern/*.jpg
 ---MD---

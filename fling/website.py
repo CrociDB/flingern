@@ -65,9 +65,13 @@ class FlingernWebsite:
         page_name = os.path.basename(page_file).split(".")[0]
         url = page_name + ".html"
 
+        if not "menu" in page:
+            page["menu"] = page["title"]
+            
         page["name"] = page_name
         page["url"] = url
         page["content"] = markdown.markdown(content[1], extensions=['tables'])
+            
 
         return page
 
@@ -123,10 +127,12 @@ class FlingernWebsite:
         # setup images
         self.setup_images(page)
 
+        print(page)
         result = self.site_page_template(site=self.site, page=page)
         
         result_file_path = os.path.join(self.pub_dir, page["url"])
         if os.path.isfile(result_file_path):  os.remove(result_file_path)
         with open(result_file_path, 'x') as f:
             f.write(result)
+            
 
