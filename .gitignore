@@ -1,6 +1,7 @@
 build/
 site/public
 site/build
+.vscode/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
