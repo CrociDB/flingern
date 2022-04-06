@@ -1,4 +1,6 @@
 build/
+site/public
+site/build
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
