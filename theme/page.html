@@ -36,34 +36,32 @@
         <script type="text/javascript">
             (function(){
                 $("#gallery").nanogallery2({
-                    // album: 'people',
-
-                    // // GALLERY AND THUMBNAIL LAYOUT
+                    // GALLERY AND THUMBNAIL LAYOUT
                     thumbnailHeight: '256', thumbnailWidth: 'auto',
                     gallerySorting: 'random',
                     thumbnailAlignment: 'fillWidth',
-                    thumbnailL1GutterWidth: 20,
-                    thumbnailL1GutterHeight: 20,
-                    thumbnailBorderHorizontal: 1,
-                    thumbnailBorderVertical: 1,
+                    thumbnailL1GutterWidth: 30,
+                    thumbnailL1GutterHeight: 30,
+                    thumbnailL1BorderHorizontal: 0,
+                    thumbnailL1BorderVertical: 0,
 
-                    // // THUMBNAIL TOOLS & LABEL
+                    // THUMBNAIL TOOLS & LABEL
                     thumbnailL1Label: { display: true, position:'overImageOnTop', hideIcons: true, titleFontSize: '1.5em', align: 'left'},
-                    thumbnailToolbarImage :  { topLeft: 'select', bottomRight : 'featured,display,download,info,cart' },
+                    thumbnailToolbarImage :  { topLeft: 'select', bottomRight : 'featured,display,info' },
 
-                    // // DISPLAY ANIMATION
+                    // DISPLAY ANIMATION
                     thumbnailDisplayTransition: 'flipUp',       // thumbnail display animation
                     thumbnailDisplayTransitionDuration: 400,
                     thumbnailDisplayInterval: 200,
                     thumbnailDisplayOrder: 'rowByRow',
 
-                    // // THUMBNAIL'S HOVER ANIMATION
+                    // THUMBNAIL'S HOVER ANIMATION
                     thumbnailHoverEffect2: 'toolsSlideUp|labelSlideDown',
                     touchAnimation: true,
                     touchAutoOpenDelay: -1,
 
 
-                    // // DEEP LINKING
+                    // DEEP LINKING
                     locationHash: false
                     });
             })();
