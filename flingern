@@ -8,6 +8,7 @@ import http.server
 import socketserver
 
 from functools import partial
+from pathlib import Path
 
 from fling import website
 from fling import watchdog
@@ -29,6 +30,8 @@ if __name__ == '__main__':
     parser.add_argument('-w', '--watch', help='creates a webserver and watches for changes', action='store_true')
     args = parser.parse_args()
 
+    defs.flingern_directory = Path(os.path.dirname( __file__)).absolute()
+    
     site = website.FlingernWebsite(args.path)
     site.build()
 
@@ -39,7 +42,7 @@ if __name__ == '__main__':
 
         # create watchdog
         watchdog_site = watchdog.watchdog_at(args.path)
-        watchdog_theme = watchdog.watchdog_at(os.path.join(".", defs.DIR_THEME))
+        watchdog_theme = watchdog.watchdog_at(os.path.join(defs.flingern_directory, defs.DIR_THEME))
 
         try:
             while True:

@@ -40,13 +40,15 @@ class FlingernWebsite:
         if os.path.isdir(theme_pub):
             shutil.rmtree(theme_pub)
         
+        print(defs.flingern_directory)
+        print(os.path.join(defs.flingern_directory, defs.DIR_THEME_PUBLIC))
         shutil.copytree(
-            os.path.join(os.getcwd(), defs.DIR_THEME_PUBLIC),
+            os.path.join(defs.flingern_directory, defs.DIR_THEME_PUBLIC),
             theme_pub
         )
 
         # loading templates
-        self.site_templates = PageTemplateLoader(os.path.join(os.getcwd(), defs.DIR_THEME))
+        self.site_templates = PageTemplateLoader(os.path.join(defs.flingern_directory, defs.DIR_THEME))
         self.site_page_template = self.site_templates["page.html"]
 
         # generate pages
@@ -78,12 +80,13 @@ class FlingernWebsite:
     def setup_images(self, page):
         images = []
 
-        if len(page["images"]) == 0 or not isinstance(page["images"][0], str): return
+        if "images" in page:
+            if len(page["images"]) == 0 or not isinstance(page["images"][0], str): return
 
-        for img in page["images"]:
-            imgs = glob2.glob(os.path.join(self.path, img))
-            for i in imgs:
-                images.append(self.setup_image(page, i))
+            for img in page["images"]:
+                imgs = glob2.glob(os.path.join(self.path, img))
+                for i in imgs:
+                    images.append(self.setup_image(page, i))
 
         page["images"] = images
 
