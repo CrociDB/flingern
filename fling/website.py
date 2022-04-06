@@ -67,7 +67,7 @@ class FlingernWebsite:
 
         if not "menu" in page:
             page["menu"] = page["title"]
-            
+
         page["name"] = page_name
         page["url"] = url
         page["content"] = markdown.markdown(content[1], extensions=['tables'])
@@ -127,7 +127,6 @@ class FlingernWebsite:
         # setup images
         self.setup_images(page)
 
-        print(page)
         result = self.site_page_template(site=self.site, page=page)
         
         result_file_path = os.path.join(self.pub_dir, page["url"])
