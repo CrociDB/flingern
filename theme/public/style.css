@@ -13,6 +13,7 @@ body {
 
 #center {
     padding-bottom: 10px;
+    height: 78%;
 }
 
 #header {
@@ -51,6 +52,8 @@ body {
 #page {
     width: 65%;
     float: right;
+    overflow-y: auto;
+    padding-right: 10px;
 }
 
 #page h1 {

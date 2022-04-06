@@ -31,7 +31,7 @@
                     </div>
                 </div>
             </div>
-            <div id="footer" class="hidden">
+            <div id="footer">
                 <p>${site.author} ${site.year} - created using flingern</p>
             </div>
         </div>
@@ -43,8 +43,8 @@
                     thumbnailHeight: '256', thumbnailWidth: 'auto',
                     gallerySorting: 'random',
                     thumbnailAlignment: 'fillWidth',
-                    thumbnailL1GutterWidth: 30,
-                    thumbnailL1GutterHeight: 30,
+                    thumbnailL1GutterWidth: 10,
+                    thumbnailL1GutterHeight: 10,
                     thumbnailL1BorderHorizontal: 0,
                     thumbnailL1BorderVertical: 0,
 
@@ -67,10 +67,7 @@
                     locationHash: false
                     });
 
-                    setTimeout(function() {
-                        $("#center").height($("#page")[0].clientHeight);
-                        $("#footer").show();
-                    }, 200);
+                    $("#page").height($("#center")[0].clientHeight);
                 })();
         </script>
     </body>
