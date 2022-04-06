@@ -1,6 +1,7 @@
 <html>
     <header>
         <title>${site.title} - ${page.title}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="public/style.css">
 
          <!-- jQuery -->
@@ -67,7 +68,10 @@
                     locationHash: false
                     });
 
-                    $("#page").height($("#center")[0].clientHeight);
+                    if (!window.matchMedia("only screen and (max-width: 760px)").matches)
+                    {
+                        $("#page").height($("#center")[0].clientHeight);
+                    }
                 })();
         </script>
     </body>
