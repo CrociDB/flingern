@@ -3,9 +3,12 @@
         <title>flingern - another page</title>
         <link rel="stylesheet" href="public/style.css">
 
-        <link rel="stylesheet" href="public/photoswipe/default-skin/default-skin.css">
-        <script src="public/photoswipe/photoswipe.min.js"></script>
-        <script src="public/photoswipe/photoswipe-ui-default.min.js"></script>
+         <!-- jQuery -->
+         <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" type="text/javascript"></script>
+          
+         <!-- nanogallery2 -->
+         <link  href="https://cdn.jsdelivr.net/npm/nanogallery2@3/dist/css/nanogallery2.min.css" rel="stylesheet" type="text/css">
+         <script  type="text/javascript" src="https://cdn.jsdelivr.net/npm/nanogallery2@3/dist/jquery.nanogallery2.min.js"></script>
     </header>
     <body>
         <div id="site">
@@ -58,11 +61,7 @@
 <h3>Another title</h3>
 <p>Such a good markdown test, innit?</p></div>
                     <div id="gallery">
-                        <ul>
-                            <li>
-                                <a href="other/img20220323_12570180.jpg"><img src="other/img20220323_12570180_thumb.jpg"></a>
-                            </li>
-                        </ul>
+                        <a href="other\img20220323_12570180.jpg" data-ngThumb = "other\img20220323_12570180_thumb.jpg">A</a>
                     </div>
                 </div>
             </div>
@@ -70,5 +69,41 @@
                 <p>Bruno Croci 2022 - created using flingern</p>
             </div>
         </div>
+
+        <script type="text/javascript">
+            (function(){
+                $("#gallery").nanogallery2({
+                    // album: 'people',
+
+                    // // GALLERY AND THUMBNAIL LAYOUT
+                    thumbnailHeight: '256', thumbnailWidth: 'auto',
+                    gallerySorting: 'random',
+                    thumbnailAlignment: 'fillWidth',
+                    thumbnailL1GutterWidth: 20,
+                    thumbnailL1GutterHeight: 20,
+                    thumbnailBorderHorizontal: 1,
+                    thumbnailBorderVertical: 1,
+
+                    // // THUMBNAIL TOOLS & LABEL
+                    thumbnailL1Label: { display: true, position:'overImageOnTop', hideIcons: true, titleFontSize: '1.5em', align: 'left'},
+                    thumbnailToolbarImage :  { topLeft: 'select', bottomRight : 'featured,display,download,info,cart' },
+
+                    // // DISPLAY ANIMATION
+                    thumbnailDisplayTransition: 'flipUp',       // thumbnail display animation
+                    thumbnailDisplayTransitionDuration: 400,
+                    thumbnailDisplayInterval: 200,
+                    thumbnailDisplayOrder: 'rowByRow',
+
+                    // // THUMBNAIL'S HOVER ANIMATION
+                    thumbnailHoverEffect2: 'toolsSlideUp|labelSlideDown',
+                    touchAnimation: true,
+                    touchAutoOpenDelay: -1,
+
+
+                    // // DEEP LINKING
+                    locationHash: false
+                    });
+            })();
+        </script>
     </body>
 </html>
