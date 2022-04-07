@@ -25,6 +25,8 @@ def run_webserver(path):
     httpd.serve_forever()
 
 if __name__ == '__main__':
+    print(defs.FLINGERN_HEADER.format(version))
+
     parser = argparse.ArgumentParser(description=header)
     parser.add_argument("path", help="build the website specified by path")
     parser.add_argument('-w', '--watch', help='creates a webserver and watches for changes', action='store_true')

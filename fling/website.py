@@ -40,8 +40,6 @@ class FlingernWebsite:
         if os.path.isdir(theme_pub):
             shutil.rmtree(theme_pub)
         
-        print(defs.flingern_directory)
-        print(os.path.join(defs.flingern_directory, defs.DIR_THEME_PUBLIC))
         shutil.copytree(
             os.path.join(defs.flingern_directory, defs.DIR_THEME_PUBLIC),
             theme_pub
