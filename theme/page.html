@@ -50,8 +50,7 @@
                     thumbnailL1BorderVertical: 0,
 
                     // THUMBNAIL TOOLS & LABEL
-                    thumbnailL1Label: { display: true, position:'overImageOnTop', hideIcons: true, titleFontSize: '1.5em', align: 'left'},
-                    thumbnailToolbarImage :  { topLeft: 'select', bottomRight : 'featured,display,info' },
+                    thumbnailL1Label: { display: false },
 
                     // DISPLAY ANIMATION
                     thumbnailDisplayTransition: 'flipUp',       // thumbnail display animation
@@ -61,8 +60,25 @@
 
                     // THUMBNAIL'S HOVER ANIMATION
                     thumbnailHoverEffect2: 'toolsSlideUp|labelSlideDown',
-                    touchAnimation: true,
+                    touchAnimation: false,
                     touchAutoOpenDelay: -1,
+
+                    // LIGHTBOX
+                    imageTransition: 'swipe',
+                    viewerGallery: "bottom",
+                    viewerImageDisplay: "",
+                    viewerTheme: {
+                        barBackground:          '#FFFFFF',
+                        barBorder:              '0px solid #111',
+                        barColor:               '#FFFFFF',
+                        barDescriptionColor:    '#FFF',
+                        background:             '#FFFFFF',
+                    },
+
+                    viewerTools: {
+                        topLeft: "pageCounter",
+                        topRight: "zoomButton, fullscreenButton, closeButton"
+                    },
 
                     // DEEP LINKING
                     locationHash: false

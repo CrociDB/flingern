@@ -8,6 +8,11 @@ body {
 
 #header h1 {
     font-size: 3.0em;
+    margin-bottom: 5px;
+}
+
+#header p {
+    margin-top: 5px;
 }
 
 #menu ul {
@@ -29,12 +34,18 @@ body {
     font-size: 1.2em;
 }
 
+#page {
+    padding-bottom: 1.5em;
+}
+
 #page h1 {
     margin-top: 0;
     padding-top: 0;
     text-transform: uppercase;
-    letter-spacing: .2rem;
-    text-align: center;
+    letter-spacing: .1rem;
+    text-align: justify;
+    background-color: white;
+    font-size: 1.5em;
 }
 
 #content {
@@ -42,7 +53,17 @@ body {
 }
 
 #footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
     text-align: center;
+    background-color: #FFFFFF;
+    z-index: 100;
+  }
+
+.nGY2 .nGY2Viewer {
+    background-color: #FFFFFF !important;
 }
 
 @media only screen and (min-width: 1200px) {
@@ -61,6 +82,7 @@ body {
     }
     
     #menu {
+        padding-top: .1em;
         width: 33%;
         float: left;
     }
