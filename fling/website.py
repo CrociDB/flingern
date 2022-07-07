@@ -4,7 +4,7 @@ import shutil
 import datetime
 import glob2
 
-from PIL import Image
+from PIL import Image, ImageOps
 from chameleon import PageTemplateLoader
 
 import markdown
@@ -100,12 +100,16 @@ class FlingernWebsite:
             if not os.path.isfile(image_file):
                 dimensions = (int(self.site["images_max_height"] * ratio), self.site["images_max_height"])
                 nim = im.resize(dimensions)
+                if "images_border" in self.site:
+                    nim = ImageOps.expand(nim, border=self.site["images_border"],fill='white')
                 nim.save(image_file, "JPEG", optimize=True, quality=self.site["images_quality"])
 
             # thumb
             if not os.path.isfile(image_thumb_file):
                 dimensions = (int(self.site["thumbs_max_height"] * ratio), self.site["thumbs_max_height"])
                 nim = im.resize(dimensions)
+                if "thumbs_border" in self.site:
+                    nim = ImageOps.expand(nim, border=self.site["thumbs_border"],fill='white')
                 nim.save(image_thumb_file, "JPEG", optimize=True, quality=self.site["thumbs_quality"])
 
         info = {

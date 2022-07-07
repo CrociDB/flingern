@@ -7,6 +7,9 @@ images_quality: 65
 thumbs_max_height: 256
 thumbs_quality: 30
 
+images_border: 150
+thumbs_border: 0
+
 pages:
   - flingern/index.md
   - flingern/other.md
