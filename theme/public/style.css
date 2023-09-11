@@ -69,7 +69,7 @@ body {
 @media only screen and (min-width: 1200px) {
     #site {
         margin: auto;
-        max-width: 1200px;
+        max-width: 1800px;
     }
 
     #header {
@@ -83,7 +83,7 @@ body {
     
     #menu {
         padding-top: .1em;
-        width: 33%;
+        width: 25%;
         float: left;
     }
 
@@ -92,7 +92,7 @@ body {
     }
 
     #page {
-        width: 65%;
+        width: 74%;
         float: right;
         overflow-y: auto;
         padding-right: 10px;
