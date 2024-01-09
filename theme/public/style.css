@@ -52,6 +52,10 @@ body {
     text-align: justify;
 }
 
+.img-item {
+    margin-bottom: 1.5rem;
+}
+
 #footer {
     position: fixed;
     left: 0;

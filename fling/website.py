@@ -107,7 +107,7 @@ class FlingernWebsite:
 
             # thumb
             if not os.path.isfile(image_thumb_file):
-                dimensions = (int(self.site["thumbs_max_height"] * ratio), self.site["thumbs_max_height"])
+                dimensions = (self.site["thumbs_max_width"], int(self.site["thumbs_max_width"] / ratio))
                 nim = im.resize(dimensions)
                 if "thumbs_border" in self.site:
                     nim = ImageOps.expand(nim, border=self.site["thumbs_border"],fill='white')
