@@ -1,6 +1,6 @@
 Chameleon==3.9.1
 Pillow==10.0.1
-PyYAML==5.3.1
+PyYAML==5.4
 glob2==0.4.1
 markdown==3.3.6
 watchdog==2.1.6
