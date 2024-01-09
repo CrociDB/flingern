@@ -29,7 +29,7 @@ let setupGallery = function(galleryId, galleryDesktopId, galleryMobileId)
 
     let reorder = function()
     {
-        if (window.innerWidth >= 1000)
+        if (window.innerWidth >= 1200)
         {
             galleryMobile.classList.add('d-none');
             galleryDesktop.classList.remove('d-none');
