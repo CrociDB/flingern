@@ -1,21 +1,20 @@
 let setupGallery = function(galleryId, galleryDesktopId, galleryMobileId)
 {
     let images = [];
-    let gallery = document.getElementById(galleryId);
     let galleryDesktop = document.getElementById(galleryDesktopId);
     let galleryMobile = document.getElementById(galleryMobileId);
 
-    for (const img of gallery.children)
+    document.querySelectorAll("#" + galleryId + " a").forEach((img) =>
     {
         images.push(img);
-    }
+    });
 
+    images = images.reverse();
     
     let createGallery = function(element, images)
     {
         let columns = element.children[0].children;
         let images_column = Math.ceil(images.length / columns.length);
-        console.dir(images_column);
         while (images.length > 0)
         {
             for (let i = 0; i < columns.length; i++)

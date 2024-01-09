@@ -4,8 +4,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="public/style.css">
-
+        
     </header>
     <body>
         <div id="site">
@@ -24,28 +25,28 @@
                     <div id="content" tal:content="structure page.content">
                     </div>
                     <div id="gallery" class="d-none">
-                        <a tal:repeat="img page.images" href="${img.path}" data-ngThumb = "${img.thumb}">
+                        <a tal:repeat="img page.images" href="${img.path}" data-toggle="lightbox" data-gallery="example-gallery">
                             <img src="${img.thumb}" class="img-fluid img-item" alt="...">
                         </a>
                     </div>
                     <div class="container text-center d-none" id="gallery-mobile">
                         <div class="row align-items-start">
-                          <div class="col">
-                          </div>
-                          <div class="col">
-                          </div>
+                            <div class="col">
+                            </div>
+                            <div class="col">
+                            </div>
                         </div>
                     </div>
                     <div class="container text-center d-none" id="gallery-desktop">
                         <div class="row align-items-start">
-                          <div class="col">
-                          </div>
-                          <div class="col">
-                          </div>
-                          <div class="col">
-                          </div>
-                          <div class="col">
-                        </div>
+                            <div class="col">
+                            </div>
+                            <div class="col">
+                            </div>
+                            <div class="col">
+                            </div>
+                            <div class="col">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -54,10 +55,14 @@
                 <p>${site.author} ${site.year} - created using <a href="https://github.com/CrociDB/flingern">flingern</a></p>
             </div>
         </div>
-
+        
         <script type="text/javascript" src="public/gallery.js"></script>
         <script type="text/javascript">
-            setupGallery("gallery", "gallery-desktop", "gallery-mobile");
-        </script>
+            (function() {
+                setupGallery("gallery", "gallery-desktop", "gallery-mobile");
+            })();
+            </script>
+        <script src="public/index.bundle.min.js"></script>
     </body>
-</html>
+    </html>
+    
