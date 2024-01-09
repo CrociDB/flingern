@@ -58,9 +58,9 @@ class FlingernWebsite:
         with open(page_path, 'r') as f:
             page_content = f.read()
 
-        content = page_content.split("---MD---")
-        
-        page = yaml.safe_load(content[0])
+        content = page_content.split("---")
+
+        page = yaml.safe_load(content[1])
 
         page_name = os.path.basename(page_file).split(".")[0]
         url = page_name + ".html"
@@ -68,10 +68,11 @@ class FlingernWebsite:
         if not "menu" in page:
             page["menu"] = page["title"]
 
+        page_content = "---".join(content[2:])
+
         page["name"] = page_name
         page["url"] = url
-        page["content"] = markdown.markdown(content[1], extensions=['tables'])
-            
+        page["content"] = markdown.markdown(page_content, extensions=['tables'])
 
         return page
 
