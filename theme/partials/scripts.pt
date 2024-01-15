@@ -1,0 +1,7 @@
+<script type="text/javascript" src="public/gallery.js"></script>
+<script type="text/javascript">
+    (function() {
+        setupGallery("gallery", "gallery-desktop", "gallery-mobile");
+    })();
+    </script>
+<script src="public/index.bundle.min.js"></script>

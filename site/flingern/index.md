@@ -4,6 +4,8 @@ menu: "Home"
 images: 
       - flingern/*.jpg
       - flingern/*.jpg
+      - flingern/*.jpg
+      - flingern/*.jpg
 ---
 
 **flingern** is a static photography gallery website generator written in python.
