@@ -30,11 +30,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=header)
     parser.add_argument("path", help="build the website specified by path")
     parser.add_argument('-w', '--watch', help='creates a webserver and watches for changes', action='store_true')
+    parser.add_argument('-f', '--force', help='force rebuild; that will rebuild whole site from scratch', action='store_true')
     args = parser.parse_args()
 
     defs.flingern_directory = Path(os.path.dirname( __file__)).absolute()
     
-    site = website.FlingernWebsite(args.path)
+    site = website.FlingernWebsite(args.path, args.force)
     site.build()
 
     if args.watch:

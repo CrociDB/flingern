@@ -13,7 +13,7 @@ import yaml
 from fling import defs
 
 class FlingernWebsite:
-    def __init__(self, path):
+    def __init__(self, path, force):
         self.path = path
         site_conf = os.path.join(self.path, "site.yaml")
 
@@ -24,6 +24,14 @@ class FlingernWebsite:
         
         # figuring paths
         self.pub_dir = os.path.join(self.path, defs.DIR_PUBLIC)
+        if not os.path.isdir(self.pub_dir):
+            os.mkdir(self.pub_dir)
+            
+        if force:
+            print("Force parameter passed, so deleting the whole site before\n")
+            for root, dirs, files in os.walk(self.pub_dir):
+                for f in files: os.unlink(os.path.join(root, f))
+                for d in dirs: shutil.rmtree(os.path.join(root, d))
 
         # setup pages
         pages = []
@@ -33,9 +41,6 @@ class FlingernWebsite:
 
     def build(self):
         # create theme structure
-        if not os.path.isdir(self.pub_dir):
-            os.mkdir(self.pub_dir)
-
         theme_pub = os.path.join(self.pub_dir, "public/")
         if os.path.isdir(theme_pub):
             shutil.rmtree(theme_pub)
