@@ -11,6 +11,7 @@ import markdown
 import yaml
 
 from fling import defs
+from fling import util
 
 class FlingernWebsite:
     def __init__(self, path, force):
@@ -23,7 +24,7 @@ class FlingernWebsite:
         self.site["year"] = datetime.datetime.today().year
         
         # figuring paths
-        self.pub_dir = os.path.join(self.path, defs.DIR_PUBLIC)
+        self.pub_dir = os.path.realpath(os.path.join(self.path, defs.DIR_PUBLIC))
         if not os.path.isdir(self.pub_dir):
             os.mkdir(self.pub_dir)
             
@@ -59,7 +60,7 @@ class FlingernWebsite:
             self.build_page(page)
             
     def setup_page(self, page_file):
-        page_path = os.path.join(self.path, page_file)
+        page_path = os.path.join(self.path, defs.DIR_CONTENT, page_file)
         with open(page_path, 'r') as f:
             page_content = f.read()
 
@@ -68,17 +69,22 @@ class FlingernWebsite:
         page = yaml.safe_load(content[1])
 
         page_name = os.path.basename(page_file).split(".")[0]
-        url = page_name + ".html"
 
         if not "menu" in page:
             page["menu"] = page["title"]
 
         page_content = "---".join(content[2:])
+        
+        content_path = os.path.abspath(os.path.join(self.path, defs.DIR_CONTENT))
+        content_path = util.path_relative_from(
+            os.path.dirname(os.path.realpath(page_path)),
+            content_path)
 
         page["name"] = page_name
-        page["url"] = url
+        page["content_path"] = content_path
+        page["url"] = os.path.join(page["content_path"], page["name"] + ".html")
         page["content"] = markdown.markdown(page_content, extensions=['tables'])
-
+        
         return page
 
     def setup_images(self, page):
@@ -88,16 +94,21 @@ class FlingernWebsite:
             if len(page["images"]) == 0 or not isinstance(page["images"][0], str): return
 
             for img in page["images"]:
-                imgs = glob2.glob(os.path.join(self.path, img))
+                imgs = glob2.glob(os.path.join(self.path, defs.DIR_CONTENT, page["content_path"], img))
                 for i in imgs:
                     images.append(self.setup_image(page, i))
 
         page["images"] = images
 
     def setup_image(self, page, original_image_path):
-        image_name = os.path.basename(original_image_path).split(".")[0]
-        image_file = os.path.join(page["images_path"], image_name) + ".jpg"
-        image_thumb_file = os.path.join(page["images_path"], image_name) + "_thumb.jpg"
+
+        image_name = util.path_relative_from(original_image_path, os.path.join(self.path, defs.DIR_CONTENT)).split(".")[0]
+        image_path = os.path.join(self.pub_dir, os.path.dirname(image_name))
+        image_file = os.path.join(self.pub_dir, image_name) + ".jpg"
+        image_thumb_file = os.path.join(self.pub_dir, image_name) + "_thumb.jpg"
+        
+        if not os.path.isdir(image_path):
+            os.mkdir(image_path)
 
         with Image.open(original_image_path) as im:
             ratio = im.size[0] / im.size[1]
@@ -119,8 +130,8 @@ class FlingernWebsite:
                 nim.save(image_thumb_file, "JPEG", optimize=True, quality=self.site["thumbs_quality"])
 
         info = {
-            "path": os.path.join(page["name"], image_name) + ".jpg",
-            "thumb": os.path.join(page["name"], image_name) + "_thumb.jpg"
+            "path": image_name + ".jpg",
+            "thumb": image_name + "_thumb.jpg"
         }
 
         return info
@@ -129,11 +140,9 @@ class FlingernWebsite:
     def build_page(self, page):
         print("Building page %s" % page["url"])
 
-        images_path = os.path.join(self.pub_dir, page["name"])
-        if not os.path.isdir(images_path):
-            os.mkdir(images_path)
-
-        page["images_path"] = images_path
+        page_path = os.path.join(self.pub_dir, page["content_path"])
+        if not os.path.isdir(page_path):
+            os.mkdir(page_path)
 
         # setup images
         self.setup_images(page)

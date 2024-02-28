@@ -1,5 +1,5 @@
 <div id="menu">
     <ul>
-        <li tal:repeat="p site.pages"><a href="${p.url}">${p.menu}</a></li>
+    <li tal:repeat="p site.pages"><a href="${site.url}/${p.url}">${p.menu}</a></li>
     </ul>
 </div>

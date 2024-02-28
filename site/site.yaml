@@ -1,6 +1,7 @@
 title: "flingern"
 description: "static photography gallery website generator"
 author: "Bruno Croci"
+url: "http://alpharaymond.crocidb.com:8080"
 
 images_max_height: 1024
 images_quality: 65
@@ -11,5 +12,5 @@ images_border: 150
 thumbs_border: 0
 
 pages:
-  - flingern/index.md
+  - index.md
   - flingern/other.md

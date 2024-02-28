@@ -12,6 +12,7 @@ d88P"  888 Y8P
                         \33[90m"Y88P"           \033[93mwebsite generator\033[0m          
                     """
 
+DIR_CONTENT = "content/"
 DIR_PUBLIC = "public/"
 DIR_THEME = "theme/"
 DIR_THEME_PUBLIC = "theme/public/"

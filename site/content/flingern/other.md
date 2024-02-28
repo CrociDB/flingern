@@ -1,7 +1,9 @@
 ---
 title: "Another page"
 images: 
-      - flingern/img20220323_12570180.jpg
+        - img20220323_12570180.jpg
+        - "*.jpg"
+        - "*.jpg"
 ---
 
 ## This is another page
