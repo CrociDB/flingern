@@ -101,12 +101,15 @@ class FlingernWebsite:
         page["images"] = images
 
     def setup_image(self, page, original_image_path):
+        original_image_path = original_image_path.replace("./", "")
 
-        image_name = util.path_relative_from(original_image_path, os.path.join(self.path, defs.DIR_CONTENT)).split(".")[0]
+        image_name = util.path_relative_from(original_image_path, os.path.join(self.path, defs.DIR_CONTENT)).split(".")[-2]
         image_path = os.path.join(self.pub_dir, os.path.dirname(image_name))
         image_file = os.path.join(self.pub_dir, image_name) + ".jpg"
         image_thumb_file = os.path.join(self.pub_dir, image_name) + "_thumb.jpg"
         
+        #print(f"Image name: {image_name}, Path: {image_path}, File: {image_file}, Thumb: {image_thumb_file}\n")
+
         if not os.path.isdir(image_path):
             os.mkdir(image_path)
 
