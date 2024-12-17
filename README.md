@@ -6,5 +6,11 @@ Example: [Bruno Croci's Photos](http://photos.crocidb.com/forest.html)
 
 ```shell
 sudo apt install libjpeg-dev zlib1g-dev
-pip install -r requirements.txt
+source venv.sh
+```
+
+# Run
+
+```shell
+python flingern.py website/
 ```
