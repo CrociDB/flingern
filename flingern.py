@@ -16,7 +16,7 @@ from fling import defs
 
 version = "0.1"
 header = f"flingern {version}"
-port = 8080
+port = 8089
 
 def run_webserver(path):
     handler = partial(http.server.SimpleHTTPRequestHandler, directory=path)
