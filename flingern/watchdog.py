@@ -4,7 +4,7 @@ from importlib.metadata import files
 from operator import truediv
 import time
 
-from fling import defs
+from flingern import defs
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler

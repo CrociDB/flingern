@@ -10,8 +10,8 @@ from chameleon import PageTemplateLoader
 import markdown
 import yaml
 
-from fling import defs
-from fling import util
+from flingern import defs
+from flingern import util
 
 class FlingernWebsite:
     def __init__(self, path, force):

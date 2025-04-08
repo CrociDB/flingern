@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 import os
 import time
 import argparse
@@ -10,9 +8,9 @@ import socketserver
 from functools import partial
 from pathlib import Path
 
-from fling import website
-from fling import watchdog
-from fling import defs
+from flingern import website
+from flingern import watchdog
+from flingern import defs
 
 version = "0.1"
 header = f"flingern {version}"
@@ -24,7 +22,7 @@ def run_webserver(path):
     print("Serving at port", port)
     httpd.serve_forever()
 
-if __name__ == '__main__':
+def main(): 
     print(defs.FLINGERN_HEADER.format(version))
 
     parser = argparse.ArgumentParser(description=header)
@@ -59,3 +57,6 @@ if __name__ == '__main__':
             watchdog_theme.stop()
 
         t.join()
+
+if __name__ == '__main__':
+    main()
