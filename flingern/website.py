@@ -35,10 +35,9 @@ class FlingernWebsite:
                 for d in dirs: shutil.rmtree(os.path.join(root, d))
 
         # setup pages
-        pages = []
-        for page in self.site['pages']:
-            pages.append(self.setup_page(page))
-        self.site["pages"] = pages
+        for section in self.site['sections']:
+            for i, page in enumerate(section['pages']):
+                section['pages'][i] = self.setup_page(page)
 
     def build(self):
         # create theme structure
@@ -56,8 +55,9 @@ class FlingernWebsite:
         self.site_page_template = self.site_templates["page.html"]
 
         # generate pages
-        for page in self.site["pages"]:
-            self.build_page(page)
+        for section in self.site['sections']:
+            for page in section['pages']:
+                self.build_page(page)
             
     def setup_page(self, page_file):
         page_path = os.path.join(self.path, defs.DIR_CONTENT, page_file)

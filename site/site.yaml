@@ -11,6 +11,11 @@ thumbs_quality: 30
 images_border: 150
 thumbs_border: 0
 
-pages:
-  - index.md
-  - flingern/other.md
+sections:
+  - title: "Main"
+    pages:
+      - "index.md"
+      - "flingern/other.md"
+  - title: "Docs"
+    pages:
+      - "docs/gettingstarted.md"
