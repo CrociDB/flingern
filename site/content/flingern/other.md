@@ -12,9 +12,18 @@ Testing markdown. [This](/) is a link. Not trying an image because I'm too lazy,
 
 | Test          | A      | B           | C | D |
 |---------------|--------|-------------|---|---|
-| Another thing | hohoho | Lorem Ipsum |   |   |
-|               |        |             |   |   |
-|               |        |             |   |   |
+| Another thing | hohoho | Lorem Ipsum |   | x |
+| Uhhhh         | tests  | foobarrrrrr | x |   |
+| nothing       | nope   | foobarrrrrr | x |   |
+| Empty         | right? | ---         | x | x |
+
+## Images
+
+This is an image using regular markdown tag:
+
+![Image](img20220323_12570180.jpg)
+
+Can you see it?
 
 ### Another title
 
