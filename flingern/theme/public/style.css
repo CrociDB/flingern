@@ -1,18 +1,9 @@
 :root {
-<<<<<<< HEAD
   --primary-color: #33383b;
   --secondary-color: #5b6b71;
   --tertiary-color: #959e9d;
   --accent-color: #a0bab1;
   --background-color: #faf9f7;
-=======
-  --primary-color: #292A2C;
-  --secondary-color: #857A7A;
-  --accent-color: #8E9173;
-  --background-color: #F5F5F5;
-  --text-color: #191919;
-  --title-color: #3B3B38;
->>>>>>> 29e9f54 (stylizing tables)
 }
 
 /* Main elements */
