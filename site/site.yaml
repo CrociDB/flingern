@@ -1,7 +1,7 @@
 title: "flingern"
-description: "static photography gallery website generator"
+description: "static art gallery website generator"
 author: "Bruno Croci"
-url: "http://localhost:8080"
+url: "https://flingern.croci.art/"
 
 images_max_height: 1024
 images_quality: 65
