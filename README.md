@@ -17,10 +17,10 @@ d88P"  888 Y8P
 # Features
 
  - [x] Easy to use: write your whole website in Markdown with minimal config in TOML
- - [-] Fire up the monitor and it will serve the website and automatically rebuild it on any change
+ - [x] Fire up the monitor and it will serve the website and automatically rebuild it on any change
  - [x] Generates the website with an elegant theme
  - [ ] Theme flexibility: customize the theme as you wish
- - [x] Automatic image conversion: it converts the photos into thumbs and lower quality to save bandwidth
+ - [x] Automatic image conversion: converts photos into thumbnails and lower quality versions to save bandwidth
 
 # Getting Started
 
@@ -55,4 +55,4 @@ pip install -e .
 ```
 # Why 'flingern'?
 
-Flingern is a nice neighborhood in Düsseldorf where I usually take walks and have coffees.
+Flingern is a nice neighborhood in Düsseldorf where I usually take walks and have coffee.
