@@ -1,0 +1,31 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+
+requires = [ "setuptools>=61" ]
+
+[project]
+name = "flingern"
+version = "0.1.0"
+description = "a simple static art website generator"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [
+  { name = "Bruno Croci", email = "crocidb@gmail.com" },
+]
+requires-python = ">=3.9"
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+  # These will be read from requirements.txt by setup.py, but you can list them here if you want to migrate fully
+]
+
+urls.Homepage = "https://github.com/CrociDB/flingern"
+scripts.flingern = "flingern.main:main"
