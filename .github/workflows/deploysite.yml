@@ -56,11 +56,10 @@ jobs:
       # 5. Install Python packages and build the static site
       - name: Install dependencies and build website
         run: |
-          source venv.sh
-          pip install -e .
-          cd site/
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          uv sync
           # This generates the site into the 'public' directory
-          flingern .
+          uv run main.py site/
 
       # 6. Configure GitHub Pages
       - name: Setup Pages
