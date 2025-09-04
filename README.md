@@ -46,12 +46,17 @@ flingern --watch .
 
 # Development
 
-In order to setup the development environment, you might need some system-wide dependencies such as `libjpeg-dev` and `zlib1g-dev`:
+In order to setup the development environment, you might need some system-wide dependencies such as `libjpeg-dev` and `zlib1g-dev`. Example installing it with a Debian-based distro:
 
 ```shell
 sudo apt install libjpeg-dev zlib1g-dev
-source venv.sh
-pip install -e .
+```
+
+Then sync dependencies and run with **uv**:
+
+```shell
+uv sync
+uv run main.py
 ```
 # Why 'flingern'?
 

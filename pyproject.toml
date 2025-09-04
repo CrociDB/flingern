@@ -1,31 +1,31 @@
-[build-system]
-build-backend = "setuptools.build_meta"
-
-requires = [ "setuptools>=61" ]
-
 [project]
 name = "flingern"
 version = "0.1.0"
 description = "a simple static art website generator"
 readme = "README.md"
-license = { file = "LICENSE" }
+requires-python = ">=3.9"
+
 authors = [
   { name = "Bruno Croci", email = "crocidb@gmail.com" },
 ]
-requires-python = ">=3.9"
-classifiers = [
-  "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.7",
-  "Programming Language :: Python :: 3.8",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Programming Language :: Python :: 3.13",
-]
+
 dependencies = [
-  # These will be read from requirements.txt by setup.py, but you can list them here if you want to migrate fully
+  "Chameleon==4.5.4",
+  "Pillow==11.0.0",
+  "PyYAML==6.0.2",
+  "glob2==0.7",
+  "markdown==3.7",
+  "watchdog==6.0.0",
+  "importlib-metadata==8.5.0"
 ]
 
-urls.Homepage = "https://github.com/CrociDB/flingern"
-scripts.flingern = "flingern.main:main"
+[project.scripts]
+rpcats = "main:main"
+
+[build-system]
+requires = ["setuptools>=78.1.0", "wheel>=0.45.1"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["flingern*"]
