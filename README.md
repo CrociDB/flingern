@@ -46,10 +46,10 @@ flingern --watch .
 
 # Development
 
-In order to setup the development environment, you might need some system-wide dependencies such as `libjpeg-dev` and `zlib1g-dev`. Example installing it with a Debian-based distro:
+*flingern* uses `nix-shell` to build a reliable development shell:
 
 ```shell
-sudo apt install libjpeg-dev zlib1g-dev
+nix-shell
 ```
 
 Then sync dependencies and run with **uv**:
