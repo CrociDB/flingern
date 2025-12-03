@@ -17,8 +17,11 @@ header = f"flingern {version}"
 port = 8089
 
 def run_webserver(path):
+    class ReusableTCPServer(socketserver.TCPServer):
+        allow_reuse_address = True
+
     handler = partial(http.server.SimpleHTTPRequestHandler, directory=path)
-    httpd = socketserver.TCPServer(("", port), handler)
+    httpd = ReusableTCPServer(("", port), handler)
     print("Serving at port", port)
     httpd.serve_forever()
 
@@ -38,7 +41,7 @@ def main():
 
     if args.watch:
         # create webserver
-        t = threading.Thread(target=run_webserver, args=(os.path.join(".", args.path, "public/"),))
+        t = threading.Thread(target=run_webserver, args=(os.path.join(".", args.path, "public/"),), daemon=True)
         t.start()
 
         # create watchdog
@@ -55,8 +58,6 @@ def main():
         except KeyboardInterrupt:
             watchdog_site.stop()
             watchdog_theme.stop()
-
-        t.join()
 
 if __name__ == '__main__':
     main()
