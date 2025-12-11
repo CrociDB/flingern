@@ -1,7 +1,7 @@
-import os
 import shutil
 import datetime
 from pathlib import Path
+from typing import Dict, Any, List
 
 from PIL import Image, ImageOps
 from chameleon import PageTemplateLoader
@@ -12,12 +12,12 @@ import yaml
 from flingern import defs
 
 class FlingernWebsite:
-    def __init__(self, path: Path, force: bool):
+    def __init__(self, path: Path, force: bool) -> None:
         self.path = path
         site_conf = self.path / "site.yaml"
 
         with site_conf.open('r') as f:
-            self.site = yaml.safe_load(f)
+            self.site: Dict[str, Any] = yaml.safe_load(f)
 
         self.site["year"] = datetime.datetime.today().year
         
@@ -39,7 +39,7 @@ class FlingernWebsite:
             for i, page in enumerate(section['pages']):
                 section['pages'][i] = self.setup_page(page)
 
-    def build(self):
+    def build(self) -> None:
         # create theme structure
         theme_pub = self.pub_dir / "public"
         if theme_pub.is_dir():
@@ -59,20 +59,20 @@ class FlingernWebsite:
             for page in section['pages']:
                 self.build_page(page)
             
-    def setup_page(self, page_file):
+    def setup_page(self, page_file: str) -> Dict[str, Any]:
         page_path = self.path / defs.DIR_CONTENT / page_file
         page_content = page_path.read_text()
 
         content = page_content.split("---")
 
-        page = yaml.safe_load(content[1])
+        page: Dict[str, Any] = yaml.safe_load(content[1])
 
         page_name = page_path.stem
 
         if not "menu" in page:
             page["menu"] = page["title"]
 
-        page_content = "---".join(content[2:])
+        page_content_md = "---".join(content[2:])
         
         content_path_root = (self.path / defs.DIR_CONTENT).resolve()
         content_path = page_path.parent.resolve().relative_to(content_path_root)
@@ -80,12 +80,12 @@ class FlingernWebsite:
         page["name"] = page_name
         page["content_path"] = str(content_path)
         page["url"] = str(content_path / (page["name"] + ".html"))
-        page["content"] = markdown.markdown(page_content, extensions=['tables'])
+        page["content"] = markdown.markdown(page_content_md, extensions=['tables'])
         
         return page
 
-    def setup_images(self, page):
-        images = []
+    def setup_images(self, page: Dict[str, Any]) -> None:
+        images: List[Dict[str, str]] = []
 
         if "images" in page:
             if len(page["images"]) == 0 or not isinstance(page["images"][0], str): return
@@ -99,7 +99,7 @@ class FlingernWebsite:
 
         page["images"] = images
 
-    def setup_image(self, original_image_path: Path):
+    def setup_image(self, original_image_path: Path) -> Dict[str, str]:
         content_root = self.path / defs.DIR_CONTENT
         
         rel_path = original_image_path.relative_to(content_root)
@@ -140,7 +140,7 @@ class FlingernWebsite:
         return info
 
 
-    def build_page(self, page):
+    def build_page(self, page: Dict[str, Any]) -> None:
         print("Building page %s" % page["url"])
 
         page_path = self.pub_dir / page["content_path"]
@@ -157,5 +157,3 @@ class FlingernWebsite:
         
         # Write content
         result_file_path.write_text(result)
-            
-
