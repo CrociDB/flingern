@@ -1,4 +1,3 @@
-import os
 import time
 import argparse
 import threading
@@ -20,7 +19,8 @@ def run_webserver(path):
     class ReusableTCPServer(socketserver.TCPServer):
         allow_reuse_address = True
 
-    handler = partial(http.server.SimpleHTTPRequestHandler, directory=path)
+    # SimpleHTTPRequestHandler expects a string for directory
+    handler = partial(http.server.SimpleHTTPRequestHandler, directory=str(path))
     httpd = ReusableTCPServer(("", port), handler)
     print("Serving at port", port)
     httpd.serve_forever()
@@ -34,19 +34,21 @@ def main():
     parser.add_argument('-f', '--force', help='force rebuild; that will rebuild whole site from scratch', action='store_true')
     args = parser.parse_args()
 
-    defs.flingern_directory = Path(os.path.dirname( __file__)).absolute()
+    defs.flingern_directory = Path(__file__).parent.resolve()
     
-    site = website.FlingernWebsite(args.path, args.force)
+    project_path = Path(args.path)
+    site = website.FlingernWebsite(project_path, args.force)
     site.build()
 
     if args.watch:
         # create webserver
-        t = threading.Thread(target=run_webserver, args=(os.path.join(".", args.path, "public/"),), daemon=True)
+        public_dir = project_path / "public"
+        t = threading.Thread(target=run_webserver, args=(public_dir,), daemon=True)
         t.start()
 
         # create watchdog
-        watchdog_site = watchdog.watchdog_at(args.path)
-        watchdog_theme = watchdog.watchdog_at(os.path.join(defs.flingern_directory, defs.DIR_THEME))
+        watchdog_site = watchdog.watchdog_at(project_path)
+        watchdog_theme = watchdog.watchdog_at(defs.flingern_directory / defs.DIR_THEME)
 
         try:
             while True:

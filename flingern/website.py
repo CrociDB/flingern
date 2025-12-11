@@ -1,8 +1,7 @@
 import os
-import sys
 import shutil
 import datetime
-import glob2
+from pathlib import Path
 
 from PIL import Image, ImageOps
 from chameleon import PageTemplateLoader
@@ -11,28 +10,29 @@ import markdown
 import yaml
 
 from flingern import defs
-from flingern import util
 
 class FlingernWebsite:
-    def __init__(self, path, force):
+    def __init__(self, path: Path, force: bool):
         self.path = path
-        site_conf = os.path.join(self.path, "site.yaml")
+        site_conf = self.path / "site.yaml"
 
-        with open(site_conf, 'r') as f:
+        with site_conf.open('r') as f:
             self.site = yaml.safe_load(f)
 
         self.site["year"] = datetime.datetime.today().year
         
         # figuring paths
-        self.pub_dir = os.path.realpath(os.path.join(self.path, defs.DIR_PUBLIC))
-        if not os.path.isdir(self.pub_dir):
-            os.mkdir(self.pub_dir)
+        self.pub_dir = (self.path / defs.DIR_PUBLIC).resolve()
+        if not self.pub_dir.is_dir():
+            self.pub_dir.mkdir()
             
         if force:
             print("Force parameter passed, so deleting the whole site before\n")
-            for root, dirs, files in os.walk(self.pub_dir):
-                for f in files: os.unlink(os.path.join(root, f))
-                for d in dirs: shutil.rmtree(os.path.join(root, d))
+            for item in self.pub_dir.iterdir():
+                if item.is_file():
+                    item.unlink()
+                elif item.is_dir():
+                    shutil.rmtree(item)
 
         # setup pages
         for section in self.site['sections']:
@@ -41,17 +41,17 @@ class FlingernWebsite:
 
     def build(self):
         # create theme structure
-        theme_pub = os.path.join(self.pub_dir, "public/")
-        if os.path.isdir(theme_pub):
+        theme_pub = self.pub_dir / "public"
+        if theme_pub.is_dir():
             shutil.rmtree(theme_pub)
         
         shutil.copytree(
-            os.path.join(defs.flingern_directory, defs.DIR_THEME_PUBLIC),
+            Path(defs.flingern_directory) / defs.DIR_THEME_PUBLIC,
             theme_pub
         )
 
         # loading templates
-        self.site_templates = PageTemplateLoader(os.path.join(defs.flingern_directory, defs.DIR_THEME))
+        self.site_templates = PageTemplateLoader(str(Path(defs.flingern_directory) / defs.DIR_THEME))
         self.site_page_template = self.site_templates["page.html"]
 
         # generate pages
@@ -60,29 +60,26 @@ class FlingernWebsite:
                 self.build_page(page)
             
     def setup_page(self, page_file):
-        page_path = os.path.join(self.path, defs.DIR_CONTENT, page_file)
-        with open(page_path, 'r') as f:
-            page_content = f.read()
+        page_path = self.path / defs.DIR_CONTENT / page_file
+        page_content = page_path.read_text()
 
         content = page_content.split("---")
 
         page = yaml.safe_load(content[1])
 
-        page_name = os.path.basename(page_file).split(".")[0]
+        page_name = page_path.stem
 
         if not "menu" in page:
             page["menu"] = page["title"]
 
         page_content = "---".join(content[2:])
         
-        content_path = os.path.abspath(os.path.join(self.path, defs.DIR_CONTENT))
-        content_path = util.path_relative_from(
-            os.path.dirname(os.path.realpath(page_path)),
-            content_path)
+        content_path_root = (self.path / defs.DIR_CONTENT).resolve()
+        content_path = page_path.parent.resolve().relative_to(content_path_root)
 
         page["name"] = page_name
-        page["content_path"] = content_path
-        page["url"] = os.path.join(page["content_path"], page["name"] + ".html")
+        page["content_path"] = str(content_path)
+        page["url"] = str(content_path / (page["name"] + ".html"))
         page["content"] = markdown.markdown(page_content, extensions=['tables'])
         
         return page
@@ -93,31 +90,34 @@ class FlingernWebsite:
         if "images" in page:
             if len(page["images"]) == 0 or not isinstance(page["images"][0], str): return
 
-            for img in page["images"]:
-                imgs = glob2.glob(os.path.join(self.path, defs.DIR_CONTENT, page["content_path"], img))
+            for img_pattern in page["images"]:
+                base_dir = self.path / defs.DIR_CONTENT / page["content_path"]
+                imgs = list(base_dir.glob(img_pattern))
+                
                 for i in imgs:
-                    images.append(self.setup_image(page, i))
+                    images.append(self.setup_image(i))
 
         page["images"] = images
 
-    def setup_image(self, page, original_image_path):
-        original_image_path = original_image_path.replace("./", "")
-
-        image_name = util.path_relative_from(original_image_path, os.path.join(self.path, defs.DIR_CONTENT)).split(".")[-2]
-        image_path = os.path.join(self.pub_dir, os.path.dirname(image_name))
-        image_file = os.path.join(self.pub_dir, image_name) + ".jpg"
-        image_thumb_file = os.path.join(self.pub_dir, image_name) + "_thumb.jpg"
+    def setup_image(self, original_image_path: Path):
+        content_root = self.path / defs.DIR_CONTENT
         
-        #print(f"Image name: {image_name}, Path: {image_path}, File: {image_file}, Thumb: {image_thumb_file}\n")
-
-        if not os.path.isdir(image_path):
-            os.mkdir(image_path)
+        rel_path = original_image_path.relative_to(content_root)
+        
+        image_rel_no_ext = rel_path.with_suffix('')
+        
+        image_path = self.pub_dir / image_rel_no_ext.parent
+        image_file = (self.pub_dir / image_rel_no_ext).with_suffix(".jpg")
+        image_thumb_file = self.pub_dir / (str(image_rel_no_ext) + "_thumb.jpg")
+        
+        if not image_path.is_dir():
+            image_path.mkdir(parents=True, exist_ok=True)
 
         with Image.open(original_image_path) as im:
             ratio = im.size[0] / im.size[1]
             
             # image
-            if not os.path.isfile(image_file):
+            if not image_file.is_file():
                 dimensions = (int(self.site["images_max_height"] * ratio), self.site["images_max_height"])
                 nim = im.resize(dimensions)
                 if "images_border" in self.site:
@@ -125,7 +125,7 @@ class FlingernWebsite:
                 nim.save(image_file, "JPEG", optimize=True, quality=self.site["images_quality"])
 
             # thumb
-            if not os.path.isfile(image_thumb_file):
+            if not image_thumb_file.is_file():
                 dimensions = (self.site["thumbs_max_width"], int(self.site["thumbs_max_width"] / ratio))
                 nim = im.resize(dimensions)
                 if "thumbs_border" in self.site:
@@ -133,8 +133,8 @@ class FlingernWebsite:
                 nim.save(image_thumb_file, "JPEG", optimize=True, quality=self.site["thumbs_quality"])
 
         info = {
-            "path": image_name + ".jpg",
-            "thumb": image_name + "_thumb.jpg"
+            "path": str(image_file.relative_to(self.pub_dir)),
+            "thumb": str(image_thumb_file.relative_to(self.pub_dir))
         }
 
         return info
@@ -143,18 +143,19 @@ class FlingernWebsite:
     def build_page(self, page):
         print("Building page %s" % page["url"])
 
-        page_path = os.path.join(self.pub_dir, page["content_path"])
-        if not os.path.isdir(page_path):
-            os.mkdir(page_path)
+        page_path = self.pub_dir / page["content_path"]
+        if not page_path.is_dir():
+            page_path.mkdir(parents=True, exist_ok=True)
 
         # setup images
         self.setup_images(page)
 
         result = self.site_page_template(site=self.site, page=page)
         
-        result_file_path = os.path.join(self.pub_dir, page["url"])
-        if os.path.isfile(result_file_path):  os.remove(result_file_path)
-        with open(result_file_path, 'x') as f:
-            f.write(result)
+        result_file_path = self.pub_dir / page["url"]
+        if result_file_path.is_file():  result_file_path.unlink()
+        
+        # Write content
+        result_file_path.write_text(result)
             
 
