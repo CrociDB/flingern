@@ -1,34 +1,31 @@
 import time
 from pathlib import Path
+from typing import Union, Callable
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 from flingern import defs
 
-filesystem_changed = False
-
 class WatchdogHandler(FileSystemEventHandler):
-    last_call = 0
+    def __init__(self, callback: Callable[[], None]):
+        self.callback = callback
+        self.last_call = 0.0
 
-    @staticmethod
-    def on_any_event(event):
-        if time.time() - WatchdogHandler.last_call < 3.0: return
-        WatchdogHandler.last_call = time.time()
-  
+    def on_any_event(self, event):
+        if time.time() - self.last_call < 3.0: return
+        
         if event.event_type in ('created', 'modified'):
-            # Ignore changes in the public directory (build output)
             if defs.DIR_PUBLIC in event.src_path: return
 
+            self.last_call = time.time()
             print("File %s: %s" % (event.event_type, event.src_path))
-            global filesystem_changed
-            filesystem_changed = True
+            self.callback()
 
-def watchdog_at(path):
-    # path can be Path object or string
+def watchdog_at(path: Union[str, Path], callback: Callable[[], None]) -> Observer:
     path_str = str(path)
 
-    event_handler = WatchdogHandler()
+    event_handler = WatchdogHandler(callback)
     observer = Observer()
     observer.schedule(event_handler, path_str, recursive=True)
     observer.start()

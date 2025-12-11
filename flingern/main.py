@@ -19,7 +19,6 @@ def run_webserver(path):
     class ReusableTCPServer(socketserver.TCPServer):
         allow_reuse_address = True
 
-    # SimpleHTTPRequestHandler expects a string for directory
     handler = partial(http.server.SimpleHTTPRequestHandler, directory=str(path))
     httpd = ReusableTCPServer(("", port), handler)
     print("Serving at port", port)
@@ -46,20 +45,26 @@ def main():
         t = threading.Thread(target=run_webserver, args=(public_dir,), daemon=True)
         t.start()
 
+        # build lock to prevent concurrent builds from multiple watchers
+        build_lock = threading.Lock()
+
+        def safe_build():
+            with build_lock:
+                print("\nRebuilding site...")
+                site.build()
+
         # create watchdog
-        watchdog_site = watchdog.watchdog_at(project_path)
-        watchdog_theme = watchdog.watchdog_at(defs.flingern_directory / defs.DIR_THEME)
+        watchdog_site = watchdog.watchdog_at(project_path, safe_build)
+        watchdog_theme = watchdog.watchdog_at(defs.flingern_directory / defs.DIR_THEME, safe_build)
 
         try:
             while True:
                 time.sleep(1)
-                if watchdog.filesystem_changed:
-                    watchdog.filesystem_changed = False
-                    site.build()
-
         except KeyboardInterrupt:
             watchdog_site.stop()
             watchdog_theme.stop()
+            watchdog_site.join()
+            watchdog_theme.join()
 
 if __name__ == '__main__':
     main()
