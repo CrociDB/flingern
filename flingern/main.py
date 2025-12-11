@@ -1,19 +1,18 @@
-import time
 import argparse
-import threading
 import http.server
 import socketserver
-
+import sys
+import threading
+import time
 from functools import partial
 from pathlib import Path
 
-from flingern import website
-from flingern import watchdog
-from flingern import defs
+from flingern import defs, watchdog, website
 
 version = "0.1"
 header = f"flingern {version}"
 port = 8089
+
 
 def run_webserver(path):
     class ReusableTCPServer(socketserver.TCPServer):
@@ -24,29 +23,28 @@ def run_webserver(path):
     print("Serving at port", port)
     httpd.serve_forever()
 
-def main(): 
-    print(defs.FLINGERN_HEADER.format(version))
 
-    parser = argparse.ArgumentParser(description=header)
-    parser.add_argument("path", help="build the website specified by path")
-    parser.add_argument('-w', '--watch', help='creates a webserver and watches for changes', action='store_true')
-    parser.add_argument('-f', '--force', help='force rebuild; that will rebuild whole site from scratch', action='store_true')
-    args = parser.parse_args()
-
-    defs.flingern_directory = Path(__file__).parent.resolve()
-    
+def build(args):
     project_path = Path(args.path)
     site = website.FlingernWebsite(project_path, args.force)
     site.build()
 
-    if args.watch:
-        # create webserver
-        public_dir = project_path / "public"
-        t = threading.Thread(target=run_webserver, args=(public_dir,), daemon=True)
-        t.start()
 
-        # build lock to prevent concurrent builds from multiple watchers
-        build_lock = threading.Lock()
+def serve(args):
+    project_path = Path(args.path)
+    site = website.FlingernWebsite(project_path, args.force)
+    site.build()
+
+    # create webserver
+    public_dir = project_path / defs.DIR_PUBLIC
+    t = threading.Thread(target=run_webserver, args=(public_dir,), daemon=True)
+    t.start()
+
+    # build lock to prevent concurrent builds from multiple watchers
+    build_lock = threading.Lock()
+
+    # watch for changes?
+    if args.watch:
 
         def safe_build():
             with build_lock:
@@ -55,7 +53,7 @@ def main():
 
         # create watchdog
         watchdog_site = watchdog.watchdog_at(project_path, safe_build)
-        watchdog_theme = watchdog.watchdog_at(defs.flingern_directory / defs.DIR_THEME, safe_build)
+        watchdog_theme = watchdog.watchdog_at(Path(defs.flingern_directory) / defs.DIR_THEME, safe_build)
 
         try:
             while True:
@@ -65,6 +63,81 @@ def main():
             watchdog_theme.stop()
             watchdog_site.join()
             watchdog_theme.join()
+    else:
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            pass
 
-if __name__ == '__main__':
+    print("\nk bye")
+
+
+# CLI Commands
+def cmd_serve(args):
+    serve(args)
+
+
+def cmd_build(args):
+    build(args)
+
+
+def cmd_new(args):
+    print(f"New command is not implemented yet. Target path: {args.path}")
+
+
+def main():
+    print(defs.FLINGERN_HEADER.format(version))
+
+    # set the flingern directory global definition
+    defs.flingern_directory = Path(__file__).parent.resolve()
+
+    parser = argparse.ArgumentParser(description=header)
+    subparsers = parser.add_subparsers(dest="command", required=True, help="sub-command help")
+
+    # new
+    parser_new = subparsers.add_parser("new", help="Create a new flingern project")
+    parser_new.add_argument("path", help="Path where the new project should be created")
+    parser_new.set_defaults(func=cmd_new)
+
+    # build
+    parser_build = subparsers.add_parser("build", help="Build the website")
+    parser_build.add_argument("path", help="Path to the website")
+    parser_build.add_argument(
+        "-f",
+        "--force",
+        help="force rebuild the whole site",
+        action="store_true",
+    )
+    parser_build.set_defaults(func=cmd_build)
+
+    # serve
+    parser_serve = subparsers.add_parser("serve", help="Build and serve the website")
+    parser_serve.add_argument("path", help="Path to the website")
+    parser_serve.add_argument(
+        "-f",
+        "--force",
+        help="force rebuild the whole site",
+        action="store_true",
+    )
+    parser_serve.add_argument("-w", "--watch", help="watches for changes", action="store_true")
+    parser_serve.set_defaults(func=cmd_serve)
+
+    # help
+    parser_help = subparsers.add_parser("help", help="Show this help message")
+    parser_help.set_defaults(func=lambda _: parser.print_help())
+
+    # if no arguments provided, show help
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit(1)
+
+    args = parser.parse_args()
+    if hasattr(args, "func"):
+        args.func(args)
+    else:
+        parser.print_help()
+
+
+if __name__ == "__main__":
     main()
