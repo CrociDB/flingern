@@ -1,15 +1,15 @@
 import shutil
 import datetime
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Dict, Any
 
-from PIL import Image, ImageOps
 from chameleon import PageTemplateLoader
 
 import markdown
 import yaml
 
 from flingern import defs
+from flingern.images import ImageProcessor
 
 class FlingernWebsite:
     def __init__(self, path: Path, force: bool) -> None:
@@ -33,6 +33,12 @@ class FlingernWebsite:
                     item.unlink()
                 elif item.is_dir():
                     shutil.rmtree(item)
+        
+        self.image_processor = ImageProcessor(
+            content_root=self.path / defs.DIR_CONTENT,
+            public_dir=self.pub_dir,
+            config=self.site
+        )
 
         # setup pages
         for section in self.site['sections']:
@@ -84,62 +90,6 @@ class FlingernWebsite:
         
         return page
 
-    def setup_images(self, page: Dict[str, Any]) -> None:
-        images: List[Dict[str, str]] = []
-
-        if "images" in page:
-            if len(page["images"]) == 0 or not isinstance(page["images"][0], str): return
-
-            for img_pattern in page["images"]:
-                base_dir = self.path / defs.DIR_CONTENT / page["content_path"]
-                imgs = list(base_dir.glob(img_pattern))
-                
-                for i in imgs:
-                    images.append(self.setup_image(i))
-
-        page["images"] = images
-
-    def setup_image(self, original_image_path: Path) -> Dict[str, str]:
-        content_root = self.path / defs.DIR_CONTENT
-        
-        rel_path = original_image_path.relative_to(content_root)
-        
-        image_rel_no_ext = rel_path.with_suffix('')
-        
-        image_path = self.pub_dir / image_rel_no_ext.parent
-        image_file = (self.pub_dir / image_rel_no_ext).with_suffix(".jpg")
-        image_thumb_file = self.pub_dir / (str(image_rel_no_ext) + "_thumb.jpg")
-        
-        if not image_path.is_dir():
-            image_path.mkdir(parents=True, exist_ok=True)
-
-        with Image.open(original_image_path) as im:
-            ratio = im.size[0] / im.size[1]
-            
-            # image
-            if not image_file.is_file():
-                dimensions = (int(self.site["images_max_height"] * ratio), self.site["images_max_height"])
-                nim = im.resize(dimensions)
-                if "images_border" in self.site:
-                    nim = ImageOps.expand(nim, border=self.site["images_border"],fill='white')
-                nim.save(image_file, "JPEG", optimize=True, quality=self.site["images_quality"])
-
-            # thumb
-            if not image_thumb_file.is_file():
-                dimensions = (self.site["thumbs_max_width"], int(self.site["thumbs_max_width"] / ratio))
-                nim = im.resize(dimensions)
-                if "thumbs_border" in self.site:
-                    nim = ImageOps.expand(nim, border=self.site["thumbs_border"],fill='white')
-                nim.save(image_thumb_file, "JPEG", optimize=True, quality=self.site["thumbs_quality"])
-
-        info = {
-            "path": str(image_file.relative_to(self.pub_dir)),
-            "thumb": str(image_thumb_file.relative_to(self.pub_dir))
-        }
-
-        return info
-
-
     def build_page(self, page: Dict[str, Any]) -> None:
         print("Building page %s" % page["url"])
 
@@ -148,7 +98,7 @@ class FlingernWebsite:
             page_path.mkdir(parents=True, exist_ok=True)
 
         # setup images
-        self.setup_images(page)
+        self.image_processor.process_page_images(page)
 
         result = self.site_page_template(site=self.site, page=page)
         
