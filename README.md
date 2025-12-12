@@ -1,26 +1,17 @@
-```
-  d888 888 d8b                                             
-d88P"  888 Y8P                                             
-888    888                                                 
-888888 888 888 88888b.   .d88b.   .d88b.  888d888 88888b.  
-888    888 888 888 "88b d88P"88b d8P  Y8b 888P"   888 "88b 
-888    888 888 888  888 888  888 88888888 888     888  888 
-888    888 888 888  888 Y88b 888 Y8b.     888     888  888 
-888    888 888 888  888  "Y88888  "Y8888  888     888  888 
-                             888                                
-                            d88P
-                          Y88P"
-```
+<p align="center">
+  <img src="img/flingern.png" alt="flingern" />
+</p>
+<p align="center">flingern is a static art website generator</p>
 
-**flingern** is a static art website generator. Example: [Bruno Croci's Art](https://bruno.croci.art/).
+Example: [Bruno Croci's Art](https://bruno.croci.art/).
 
 # Features
 
- - [x] Easy to use: write your whole website in Markdown with minimal config in TOML
+ - [x] Easy to use: write your whole website in Markdown with minimal config in YAML
  - [x] Fire up the monitor and it will serve the website and automatically rebuild it on any change
  - [x] Generates the website with an elegant theme
- - [ ] Theme flexibility: customize the theme as you wish
  - [x] Automatic image conversion: converts photos into thumbnails and lower quality versions to save bandwidth
+ - [ ] Theme flexibility: customize the theme as you wish
 
 # Getting Started
 
@@ -30,18 +21,22 @@ Install it through PIP (still not available):
 pip install flingern
 ```
 
-The build your website with:
+Create a new site with:
 
 ```shell
-flingern website/
+flingern new my-site
 ```
 
-## Site Building Monitor
-
-**flingern** has a monitor that will automatically rebuild the site on any change and serve the build website. All you have to do is:
+The build your:
 
 ```shell
-flingern --watch .
+flingern build my-site
+```
+
+You can also serve it, and enable the watchdog to rebuild on any change:
+
+```shell
+flingern serve my-site --watch
 ```
 
 # Development
