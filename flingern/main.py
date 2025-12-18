@@ -6,11 +6,16 @@ import threading
 import time
 from functools import partial
 from pathlib import Path
+from importlib.metadata import version, PackageNotFoundError
 
 from flingern import defs, watchdog, website
 
-version = "0.1"
-header = f"flingern {version}"
+def get_version():
+    try:
+        return version(__package__ or __name__)
+    except PackageNotFoundError:
+        return "0.0.0"
+
 port = 8089
 
 
@@ -87,12 +92,16 @@ def cmd_new(args):
 
 
 def main():
-    print(defs.FLINGERN_HEADER.format(version))
+    version_header = get_version()
+    l = len(version_header)
+    for _ in range(10 - l): version_header = version_header + " "
+
+    print(defs.FLINGERN_HEADER.format(version_header))
 
     # set the flingern directory global definition
     defs.flingern_directory = Path(__file__).parent.resolve()
 
-    parser = argparse.ArgumentParser(description=header)
+    parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="command", required=True, help="sub-command help")
 
     # new
